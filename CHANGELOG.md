@@ -7,6 +7,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.0.0] - 2026-10-25
+
+### Added
+- **Executive Admin Command Center Module (`app/Modules/Admin`)**:
+  - **Super Administrator IAM & Security**:
+    - `is_super_admin` column added to `users` table via migration `2026_01_01_000007_add_is_super_admin_to_users_table.php`.
+    - Protected route middleware `EnsureSuperAdmin` (`admin`) guarding `/admin` endpoints.
+    - CLI operator command `php artisan saas:promote-admin {email} [--demote]` for command-line privilege delegation.
+  - **Tenant Impersonation Engine**:
+    - Operators can seamlessly impersonate any tenant workspace (`POST /admin/workspaces/{id}/impersonate`).
+    - Sticky top-bar impersonation warning banner on all customer dashboard views with one-click return to admin console (`POST /admin/impersonate/stop`).
+    - Bypasses tenant access barriers in `EnsureWorkspaceAccess` while preserving forensic audit records.
+  - **Tenant & Quota Governance (`/admin/workspaces`)**:
+    - Searchable directory of all tenant workspaces with membership counts, Stripe tiers, and AI credit utilization bars.
+    - Live quota adjustment modal allowing operators to allocate or adjust credit limits per tenant with automatic compliance logging.
+  - **User Directory & Role Delegation (`/admin/users`)**:
+    - Complete user account directory with role status, workspace membership counts, and self-lockout protection against accidental super admin demotion.
+  - **Feature Flag Control Matrix (`/admin/features`)**:
+    - Global feature toggle matrix for `api_access`, `webhooks`, `ai_gateway`, `audit_logs`, `team_invitations`, `custom_domains`, and `advanced_analytics`.
+    - Tenant-level override manager allowing enterprise customer exceptions.
+  - **Live Infrastructure & Health Cockpit (`/admin/monitoring`)**:
+    - Diagnostic cards with real-time latency ping gauges for PostgreSQL, Redis, storage filesystem, and disk storage capacity.
+    - Runtime environment inspection (PHP version, Laravel version, memory peak, session/queue/cache drivers).
+  - **AI Gateway Prompt Sandbox & LLM Playground (`/admin/ai-sandbox`)**:
+    - Interactive prompt testing studio with multi-model selector (Gemini 1.5 Pro/Flash, GPT-4o, GPT-4o Mini, Mock AI).
+    - Creativity/temperature slider and quick prompt presets.
+    - Real-time token breakdown (prompt, completion, total), inference latency (ms), and credit deduction preview.
+- **Aesthetic Blade UI Design System (`resources/views/admin/`)**:
+  - Dark-mode glassmorphic command center (`#070b14` / slate-900 / indigo / emerald palettes).
+  - High-end typography with Google Fonts `Plus Jakarta Sans` and `JetBrains Mono`.
+  - Micro-animations, responsive tables, KPI cards, and live health status indicators.
+- **Automated Test Suite Expansion**:
+  - Added 13 new feature tests in `tests/Feature/AdminTest.php`. Total test suite increased to 40 tests and 159 assertions passing at 100%.
+
+---
+
 ## [1.1.0] - 2026-10-25
 
 ### Added

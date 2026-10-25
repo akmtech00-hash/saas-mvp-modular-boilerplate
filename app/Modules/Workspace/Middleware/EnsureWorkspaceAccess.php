@@ -51,7 +51,10 @@ class EnsureWorkspaceAccess
 
         $requiredRoles = $role ? explode('|', $role) : ['owner', 'admin', 'member', 'viewer'];
 
-        if (!$workspace->hasUserRole((int) $user->id, $requiredRoles)) {
+        $hasImpersonationSession = $request->hasSession() && $request->session()->has('admin_impersonator_id');
+        $isSuperAdminOrImpersonator = ($user->is_super_admin ?? false) || $hasImpersonationSession;
+
+        if (!$isSuperAdminOrImpersonator && !$workspace->hasUserRole((int) $user->id, $requiredRoles)) {
             return response()->json([
                 'error' => 'forbidden',
                 'message' => 'Forbidden. Insufficient permissions for this workspace.',

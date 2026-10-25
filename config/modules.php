@@ -50,5 +50,9 @@ return [
             'enabled' => true,
             'provider' => App\Modules\AiGateway\Providers\AiGatewayServiceProvider::class,
         ],
+        'Admin' => [
+            'enabled' => true,
+            'provider' => App\Modules\Admin\Providers\AdminServiceProvider::class,
+        ],
     ],
 ];
