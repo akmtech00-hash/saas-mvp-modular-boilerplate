@@ -19,8 +19,26 @@
     </style>
 </head>
 <body class="min-h-full flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
+    <!-- Impersonation Active Banner -->
+    @if(session()->has('admin_impersonator_id'))
+    <div class="bg-amber-500/20 backdrop-blur-md border-b border-amber-500/30 px-4 py-2.5 text-xs text-amber-200 shadow-lg shadow-amber-950/40 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-2 font-medium">
+                <span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping"></span>
+                <span>⚡ <strong>ACTIVE TENANT IMPERSONATION:</strong> You are browsing as workspace <em>{{ session('impersonated_workspace_name', 'Tenant') }}</em></span>
+            </div>
+            <form action="{{ route('admin.impersonate.stop') }}" method="POST" class="inline">
+                @csrf
+                <button type="submit" class="px-3 py-1 rounded-md bg-amber-500 text-slate-950 font-bold hover:bg-amber-400 transition text-xs shadow-md">
+                    Return to Admin Console &rarr;
+                </button>
+            </form>
+        </div>
+    </div>
+    @endif
+
     <!-- Navigation Bar -->
-    <header class="border-b border-slate-800 bg-slate-900/60 backdrop-blur-md sticky top-0 z-50">
+    <header class="border-b border-slate-800 bg-slate-900/60 backdrop-blur-md sticky {{ session()->has('admin_impersonator_id') ? 'top-9' : 'top-0' }} z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center gap-4">
                 <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-violet-600 to-indigo-500 flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-500/20">
@@ -40,13 +58,18 @@
                     <span class="text-slate-500">Workspace:</span>
                     <span class="font-bold text-white flex items-center gap-1.5">
                         <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                        Acme AI Corp
+                        {{ session('impersonated_workspace_name', 'Acme AI Corp') }}
                     </span>
                 </div>
+                @if(auth()->check() && (auth()->user()->is_super_admin ?? false) || session()->has('admin_impersonator_id'))
+                <a href="{{ route('admin.dashboard') }}" class="text-xs font-bold px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white shadow-md shadow-indigo-600/30 flex items-center gap-1.5 transition">
+                    <span>⚡ Admin Console</span>
+                </a>
+                @endif
                 <a href="/docs" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center gap-1.5 transition">
                     <span>📚 API Docs</span>
                 </a>
-                <a href="https://tech-akm.com" target="_blank" rel="noopener" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/25 flex items-center gap-1.5 transition">
+                <a href="https://tech-akm.com" target="_blank" rel="noopener" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 flex items-center gap-1.5 transition">
                     <span>Built by</span>
                     <strong class="underline decoration-indigo-300">Tech AKM</strong>
                     <span>↗</span>

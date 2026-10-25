@@ -4,10 +4,8 @@ npm-debug.log
 yarn-error.log
 
 # Environment files
-.env
 .env.backup
 .env.*.local
-.env.production
 
 # Storage and Cache
 /storage/app/*
@@ -39,10 +37,10 @@ tests/coverage/
 .DS_Store
 Thumbs.db
 .idea/
-.vscode/
 *.sublime-project
 *.sublime-workspace
 .fleet/
 
 # Docker Local Overrides
 docker-compose.override.yml
+config.bat
