@@ -15,8 +15,16 @@ permissions:
 
 jobs:
   analyze:
-    name: CodeQL Security Scan
+    name: CodeQL (${{ matrix.language }})
     runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: actions
+            build-mode: none
 
     steps:
       - name: Checkout repository
@@ -25,9 +33,10 @@ jobs:
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
-          languages: javascript-typescript, actions
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
-          category: "/language:javascript-typescript"
+          category: "/language:${{ matrix.language }}"
