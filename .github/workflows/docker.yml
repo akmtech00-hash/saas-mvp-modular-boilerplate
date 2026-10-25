@@ -1,0 +1,44 @@
+name: Docker Build Validation
+
+on:
+  push:
+    branches: [main, master, develop]
+    paths:
+      - 'docker/**'
+      - 'docker-compose.yml'
+      - '.github/workflows/docker.yml'
+  pull_request:
+    branches: [main, master, develop]
+    paths:
+      - 'docker/**'
+      - 'docker-compose.yml'
+      - '.github/workflows/docker.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  docker:
+    name: Build & Validate Docker Containers
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Validate Docker Compose Configuration
+        run: docker compose config
+
+      - name: Build Application Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: docker/Dockerfile
+          push: false
+          tags: saas-modular-app:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

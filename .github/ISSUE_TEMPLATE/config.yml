@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Community & Architectural Discussions
+    url: https://github.com/tech-akm/saas-mvp-modular-boilerplate/discussions
+    about: Ask questions, discuss SaaS architecture, or share your implementations.
+  - name: 🔒 Security Vulnerability Reporting
+    url: https://github.com/tech-akm/saas-mvp-modular-boilerplate/security/policy
+    about: Please report security vulnerabilities privately according to our security policy.
+  - name: 🚀 Custom SaaS MVP Engineering by Tech AKM
+    url: https://tech-akm.com
+    about: Inquire about enterprise SaaS development and 4-week launch services.

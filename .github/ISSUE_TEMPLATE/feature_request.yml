@@ -1,0 +1,51 @@
+name: ✨ Feature Request
+description: Suggest an enhancement or new capability for the SaaS platform.
+title: "[Feature]: "
+labels: ["enhancement", "feature"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        We appreciate ideas that improve the SaaS boilerplate! Please describe the use case clearly.
+  - type: dropdown
+    id: module
+    attributes:
+      label: Target Module
+      description: Which module would this feature belong to?
+      options:
+        - "Monitoring & Observability"
+        - "Workspace & Multi-Tenancy"
+        - "Billing & Payments"
+        - "Metering & Quotas"
+        - "Auth & IAM"
+        - "New Dedicated Module"
+        - "Developer Experience & Tooling"
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or Use Case
+      description: Is your feature request related to a specific problem or SaaS MVP requirement?
+      placeholder: Currently, workspace invitations only support direct database assignment without email dispatch...
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the solution or architecture you would like to see.
+      placeholder: Implement a signed invite link with mail notification queue job...
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Any alternative solutions or workarounds you have considered.
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      options:
+        - label: I am willing to submit a Pull Request for this feature.

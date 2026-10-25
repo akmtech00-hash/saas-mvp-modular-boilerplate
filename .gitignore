@@ -1,0 +1,48 @@
+/vendor
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Environment files
+.env
+.env.backup
+.env.*.local
+.env.production
+
+# Storage and Cache
+/storage/app/*
+!/storage/app/public/.gitkeep
+/storage/framework/cache/*
+!/storage/framework/cache/data/.gitkeep
+/storage/framework/sessions/*
+!/storage/framework/sessions/.gitkeep
+/storage/framework/views/*
+!/storage/framework/views/.gitkeep
+/storage/logs/*
+!/storage/logs/.gitkeep
+/storage/*.key
+
+/bootstrap/cache/*
+!/bootstrap/cache/.gitkeep
+
+# Databases
+*.sqlite
+*.sqlite-journal
+
+# Testing & Static Analysis
+.phpunit.result.cache
+.php-cs-fixer.cache
+.phpstan.cache
+tests/coverage/
+
+# IDE & OS Files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+.fleet/
+
+# Docker Local Overrides
+docker-compose.override.yml

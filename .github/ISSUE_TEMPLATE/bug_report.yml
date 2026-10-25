@@ -1,0 +1,65 @@
+name: 🐛 Bug Report
+description: Create a report to help us fix a defect or unexpected behavior.
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report an issue! Please ensure you have searched existing issues before submitting.
+  - type: dropdown
+    id: module
+    attributes:
+      label: Affected Module
+      description: Which domain module is experiencing this issue?
+      options:
+        - "Monitoring (Health checks, Prometheus, Tracing)"
+        - "Workspace & RBAC (Multi-tenancy, Invitations)"
+        - "Billing (Stripe webhooks, Plans, Cashier)"
+        - "Metering (AI credit consumption, Limits)"
+        - "Auth (Sanctum tokens, Users, Login)"
+        - "Docker / Environment"
+        - "Database / Migrations"
+        - "Core Architecture / Other"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is.
+      placeholder: When calling POST /api/v1/meter/deduct...
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Detailed steps to reproduce the issue.
+      placeholder: |
+        1. Boot docker containers with `docker compose up -d`
+        2. Run `php artisan migrate`
+        3. Send HTTP request with header...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Logs or Stack Trace
+      description: Paste any error messages or logs from `storage/logs/laravel.log`.
+      render: shell
+  - type: input
+    id: environment
+    attributes:
+      label: Environment Info
+      description: PHP version, Docker version, OS, Laravel version.
+      placeholder: PHP 8.4, Laravel 11.57, Docker 27.3, macOS / Ubuntu 24.04
+    validations:
+      required: true

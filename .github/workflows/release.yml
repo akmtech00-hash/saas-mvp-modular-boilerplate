@@ -1,0 +1,68 @@
+name: Release & Publish
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release version tag (e.g., v1.0.0)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build & Publish Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup PHP Runtime
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: pdo, pdo_pgsql, pgsql, redis, bcmath, pcntl, mbstring, intl, zip
+          coverage: none
+          tools: composer:v2
+
+      - name: Validate composer.json
+        run: composer validate --strict
+
+      - name: Install Dependencies
+        run: composer install --no-dev --prefer-dist --optimize-autoloader --no-progress
+
+      - name: Prepare Release Archives
+        run: |
+          TAG_NAME="${{ github.event.inputs.tag || github.ref_name }}"
+          ARCHIVE_NAME="saas-mvp-modular-boilerplate-${TAG_NAME}"
+          
+          # Create zip and tar.gz archives using git archive to honor .gitattributes export-ignore
+          git archive --format=zip --prefix="${ARCHIVE_NAME}/" HEAD -o "${ARCHIVE_NAME}.zip"
+          git archive --format=tar.gz --prefix="${ARCHIVE_NAME}/" HEAD -o "${ARCHIVE_NAME}.tar.gz"
+          
+          # Compute sha256 checksums
+          sha256sum "${ARCHIVE_NAME}.zip" > "${ARCHIVE_NAME}.zip.sha256"
+          sha256sum "${ARCHIVE_NAME}.tar.gz" > "${ARCHIVE_NAME}.tar.gz.sha256"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.tag || github.ref_name }}
+          name: Release ${{ github.event.inputs.tag || github.ref_name }}
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+          files: |
+            saas-mvp-modular-boilerplate-*.zip
+            saas-mvp-modular-boilerplate-*.tar.gz
+            saas-mvp-modular-boilerplate-*.sha256
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
