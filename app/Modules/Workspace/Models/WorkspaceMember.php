@@ -24,4 +24,9 @@ class WorkspaceMember extends Model
     {
         return $this->belongsTo(Workspace::class, 'workspace_id');
     }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(\App\Modules\Auth\Models\User::class, 'user_id');
+    }
 }

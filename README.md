@@ -1,10 +1,11 @@
 # SaaS MVP Modular Boilerplate
 
-[![Release: v1.1.0](https://img.shields.io/badge/Release-v1.1.0-6366F1?logo=github)](https://github.com/tech-akm/saas-mvp-modular-boilerplate/releases)
+[![Release: v2.0.0](https://img.shields.io/badge/Release-v2.0.0-6366F1?logo=github)](https://github.com/tech-akm/saas-mvp-modular-boilerplate/releases)
 [![CI Status](https://img.shields.io/badge/CI-Passing-emerald?logo=githubactions)](.github/workflows/ci.yml)
 [![PHP Version](https://img.shields.io/badge/PHP-8.3%20%7C%208.4-777BB4?logo=php)](https://php.net)
 [![Laravel Version](https://img.shields.io/badge/Laravel-11.x-FF2D20?logo=laravel)](https://laravel.com)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker)](docker-compose.yml)
+[![Admin Console](https://img.shields.io/badge/Admin%20Console-Blade%20%26%20Glassmorphism-8B5CF6)](/admin)
 [![Code Style](https://img.shields.io/badge/Code%20Style-PSR--12%20%2F%20Pint-F59E0B)](.github/workflows/lint.yml)
 [![API Docs](https://img.shields.io/badge/API%20Docs-Interactive%20Scalar-10B981)](/docs)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -16,11 +17,13 @@ A production-grade **Modular Monolith boilerplate for Laravel 11**, designed by 
 
 ## ⚡ Core Capabilities
 
+- 🛡️ **Executive Admin Command Center (`/admin`)**: Dark-mode glassmorphic control center with executive MRR KPIs, multi-tenant directory, one-click impersonation, quota adjustments, and Super Admin delegation.
 - 🏢 **Multi-Tenant Workspaces**: Out-of-the-box tenant isolation via `TenantScope` Eloquent query guards, signed invitation links, and RBAC (Owner, Admin, Member, Viewer).
+- ⚡ **Seamless Tenant Impersonation**: Operators can instantly inspect and operate inside any tenant account with zero friction and an active session warning bar.
 - 💳 **Stripe Billing & Subscriptions**: Preconfigured plans (`starter`, `pro`, `enterprise`), cryptographic webhook signature verification (`Stripe\Webhook::constructEvent`), and subscription tier gates.
-- ⚡ **AI Credit Metering & Gateway**: Atomic credit deductions, quota reset cycles, token reconciliation, and multi-provider LLM routing (OpenAI, Google Gemini).
+- 🤖 **AI Credit Metering & Gateway**: Atomic credit deductions, quota reset cycles, token reconciliation, multi-provider LLM routing (OpenAI, Google Gemini, Mock), and an interactive prompt sandbox.
 - 🔔 **Outbound Customer Webhooks**: Customer-configurable webhook dispatching with HMAC-SHA256 signatures (`X-SaaS-Signature-256`) and delivery logs.
-- 🚩 **Tenant Feature Flags**: Plan-based entitlements and per-workspace beta flag overrides with `@feature(...)` Blade directive.
+- 🚩 **Feature Flags & Circuit Breakers**: Global feature toggles and per-tenant overrides with `@feature(...)` Blade directive.
 - 📜 **Enterprise Compliance Audit Trail**: Immutable logging of tenant mutations (plan changes, role elevations, member removals) for SOC2/GDPR readiness.
 - 🏥 **End-to-End Observability**: Deep readiness probes (`/health/ready`), liveness probes (`/health/live`), Prometheus metrics (`/metrics`), and distributed tracing (`X-Correlation-Id`).
 - 📚 **Interactive OpenAPI Docs**: Self-hosted interactive Scalar API documentation at `/docs`.
@@ -46,6 +49,7 @@ graph TD
         LaravelApp --> FlagMod["Module: Features (Feature Flags)"]
         LaravelApp --> AuditMod["Module: Audit (Compliance Trail)"]
         LaravelApp --> MonitorMod["Module: Observability & Health"]
+        LaravelApp --> AdminMod["Module: Admin Command Center (Blade & IAM)"]
     end
 
     WsMod --> Postgres[(PostgreSQL 16 Multi-Tenant)]
@@ -53,6 +57,7 @@ graph TD
     MeterMod --> Postgres
     WebhookMod --> CustomerApp[Customer Webhook Endpoints]
     MonitorMod --> Prom[Prometheus Exporter]
+    AdminMod --> Impersonate[Tenant Impersonation Session]
 ```
 
 ---
@@ -63,11 +68,12 @@ graph TD
 saas-mvp-modular-boilerplate/
 ├── app/
 │   ├── Modules/
+│   │   ├── Admin/            # Super Admin IAM, tenant impersonation, quota management & Blade UI
 │   │   ├── Auth/             # Sanctum authentication, tokens, login & onboarding
 │   │   ├── Workspace/        # Multi-tenant isolation, TenantScope, signed team invitations
 │   │   ├── Billing/          # Stripe webhooks, tier gates (starter/pro/enterprise), Cashier
 │   │   ├── Metering/         # Atomic AI credit deductions & transactional audit logs
-│   │   ├── AiGateway/        # Multi-LLM provider gateway (OpenAI, Gemini) & token billing
+│   │   ├── AiGateway/        # Multi-LLM provider gateway (OpenAI, Gemini, Mock) & token billing
 │   │   ├── Webhooks/         # Outbound customer webhooks with HMAC-SHA256 signatures
 │   │   ├── Features/         # Workspace feature flags & subscription entitlements
 │   │   ├── Audit/            # Immutable compliance activity logs (SOC2/GDPR ready)
@@ -80,14 +86,22 @@ saas-mvp-modular-boilerplate/
 │   └── providers.php
 ├── config/
 │   ├── app.php, database.php, logging.php
-│   ├── modules.php, billing.php, monitoring.php, sanctum.php
+│   ├── modules.php, billing.php, features.php, monitoring.php, sanctum.php
 ├── docker/
 │   ├── Dockerfile            # PHP 8.4-FPM with pdo_pgsql, redis, bcmath, pcntl, opcache
 │   └── nginx/default.conf    # FastCGI proxy configuration
 ├── resources/
 │   ├── docs/openapi.yaml     # OpenAPI 3.1 specification
 │   └── views/
-│       ├── dashboard.blade.php
+│       ├── admin/            # Admin Command Center Blade templates (Dark mode & Glassmorphism)
+│       │   ├── layouts/app.blade.php
+│       │   ├── dashboard.blade.php
+│       │   ├── workspaces/index.blade.php
+│       │   ├── users/index.blade.php
+│       │   ├── features/index.blade.php
+│       │   ├── monitoring/index.blade.php
+│       │   └── ai/sandbox.blade.php
+│       ├── dashboard.blade.php # Tenant client dashboard with Impersonation alert banner
 │       └── docs.blade.php    # Scalar API reference
 ├── docker-compose.yml
 └── public/
@@ -109,11 +123,15 @@ docker compose up -d
 docker compose exec app composer install
 docker compose exec app php artisan key:generate
 docker compose exec app php artisan migrate
+
+# Promote your user to Super Administrator
+docker compose exec app php artisan saas:promote-admin admin@yourdomain.com
 ```
 
-- **Dashboard**: `http://localhost:8000`
+- **Executive Admin Command Center**: `http://localhost:8000/admin`
+- **Tenant Portal Dashboard**: `http://localhost:8000`
 - **Interactive API Docs**: `http://localhost:8000/docs`
-- **Health Check**: `http://localhost:8000/health`
+- **Health Check & Readiness**: `http://localhost:8000/health`
 - **Prometheus Metrics**: `http://localhost:8000/metrics`
 
 ---
@@ -168,6 +186,26 @@ app(WebhookDispatcherService::class)->dispatch(
     eventType: 'member.invited',
     payload: ['email' => 'alex@example.com', 'role' => 'admin']
 );
+```
+
+### 4. CLI Super Admin Privilege Delegation
+```bash
+# Promote user to Super Admin
+php artisan saas:promote-admin alex@example.com
+
+# Demote user back to standard account
+php artisan saas:promote-admin alex@example.com --demote
+```
+
+### 5. Protecting Admin Console Routes
+```php
+// app/Modules/Admin/Routes/web.php
+Route::prefix('admin')->name('admin.')->middleware(['web', 'admin'])->group(function () {
+    Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/workspaces', [AdminWorkspaceController::class, 'index'])->name('workspaces.index');
+    Route::get('/monitoring', [AdminMonitoringController::class, 'index'])->name('monitoring.index');
+    Route::get('/ai-sandbox', [AdminAiSandboxController::class, 'index'])->name('ai.sandbox');
+});
 ```
 
 ---
