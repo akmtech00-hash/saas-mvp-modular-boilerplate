@@ -1,0 +1,47 @@
+"module:auth":
+  - changed-files:
+      - any-glob-to-any-file: "app/Modules/Auth/**"
+
+"module:workspace":
+  - changed-files:
+      - any-glob-to-any-file: "app/Modules/Workspace/**"
+
+"module:billing":
+  - changed-files:
+      - any-glob-to-any-file: "app/Modules/Billing/**"
+
+"module:metering":
+  - changed-files:
+      - any-glob-to-any-file: "app/Modules/Metering/**"
+
+"module:monitoring":
+  - changed-files:
+      - any-glob-to-any-file: "app/Modules/Monitoring/**"
+
+"module:features":
+  - changed-files:
+      - any-glob-to-any-file: "app/Modules/Features/**"
+
+"module:webhooks":
+  - changed-files:
+      - any-glob-to-any-file: "app/Modules/Webhooks/**"
+
+"module:audit":
+  - changed-files:
+      - any-glob-to-any-file: "app/Modules/Audit/**"
+
+"module:aigateway":
+  - changed-files:
+      - any-glob-to-any-file: "app/Modules/AiGateway/**"
+
+"area:docker":
+  - changed-files:
+      - any-glob-to-any-file: ["docker/**", "docker-compose.yml"]
+
+"area:ci":
+  - changed-files:
+      - any-glob-to-any-file: ".github/workflows/**"
+
+"area:docs":
+  - changed-files:
+      - any-glob-to-any-file: ["README.md", "CHANGELOG.md", "CONTRIBUTING.md", "resources/docs/**"]

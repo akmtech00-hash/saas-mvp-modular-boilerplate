@@ -34,5 +34,21 @@ return [
             'enabled' => true,
             'provider' => App\Modules\Monitoring\Providers\MonitoringServiceProvider::class,
         ],
+        'Features' => [
+            'enabled' => true,
+            'provider' => App\Modules\Features\Providers\FeatureServiceProvider::class,
+        ],
+        'Webhooks' => [
+            'enabled' => true,
+            'provider' => App\Modules\Webhooks\Providers\WebhookServiceProvider::class,
+        ],
+        'Audit' => [
+            'enabled' => true,
+            'provider' => App\Modules\Audit\Providers\AuditServiceProvider::class,
+        ],
+        'AiGateway' => [
+            'enabled' => true,
+            'provider' => App\Modules\AiGateway\Providers\AiGatewayServiceProvider::class,
+        ],
     ],
 ];

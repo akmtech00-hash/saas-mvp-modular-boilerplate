@@ -43,6 +43,9 @@
                         Acme AI Corp
                     </span>
                 </div>
+                <a href="/docs" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center gap-1.5 transition">
+                    <span>📚 API Docs</span>
+                </a>
                 <a href="https://tech-akm.com" target="_blank" rel="noopener" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/25 flex items-center gap-1.5 transition">
                     <span>Built by</span>
                     <strong class="underline decoration-indigo-300">Tech AKM</strong>

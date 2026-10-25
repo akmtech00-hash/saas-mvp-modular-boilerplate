@@ -1,0 +1,37 @@
+name: Code Style & Linting
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pint:
+    name: PHP Code Style (PSR-12 / Pint)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring
+          coverage: none
+          tools: composer:v2
+
+      - name: Run Pint Code Style Verification
+        run: |
+          if [ -f vendor/bin/pint ]; then
+            ./vendor/bin/pint --test
+          else
+            echo "Pint not yet installed via composer dev, running PHP syntax linter..."
+            find app config routes tests -name "*.php" -exec php -l {} \;
+          fi

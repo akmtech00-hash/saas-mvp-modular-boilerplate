@@ -13,6 +13,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/workspaces', [WorkspaceController::class, 'index'])->name('api.workspaces.index');
     Route::post('/workspaces', [WorkspaceController::class, 'store'])->name('api.workspaces.store');
 
+    Route::get('/workspace/invitation/accept', [WorkspaceController::class, 'acceptInvitation'])->name('api.workspace.invitation.accept');
+
     Route::middleware('workspace')->prefix('workspace')->group(function () {
         Route::get('/current', [WorkspaceController::class, 'show'])->name('api.workspace.show');
         Route::get('/members', [WorkspaceController::class, 'members'])->name('api.workspace.members');

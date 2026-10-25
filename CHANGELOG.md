@@ -7,6 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.1.0] - 2026-10-25
+
+### Added
+- **Multi-Provider AI Gateway (`app/Modules/AiGateway`)**:
+  - Unified multi-LLM gateway routing requests across Google Gemini, OpenAI, and simulation drivers.
+  - Automated token-to-credit reconciliation with atomic pre-flight checks and deductions via `CreditMeterService`.
+  - Supported model catalog endpoint (`GET /api/v1/ai/models`).
+- **Outbound Customer Webhook Dispatcher (`app/Modules/Webhooks`)**:
+  - Customer webhook endpoint registration with cryptographic HMAC-SHA256 signatures (`X-SaaS-Signature-256`).
+  - Delivery attempt logging, response code tracking, and test ping trigger (`POST /api/v1/webhooks/{id}/test`).
+  - Database migrations for `webhook_endpoints` and `webhook_deliveries`.
+- **Tenant Feature Flags & Entitlements (`app/Modules/Features`)**:
+  - Dynamic capability gating based on billing plan tier and per-tenant overrides.
+  - Route middleware `EnsureFeatureActive` (`feature:api_access`) and `@feature(...)` Blade directive.
+  - Database migration for `feature_flags`.
+- **Enterprise Activity & Compliance Log (`app/Modules/Audit`)**:
+  - Immutable audit logging service (`AuditLogger`) tracking user mutations, role elevations, and plan changes.
+  - Paginated audit log inspection endpoint (`GET /api/v1/audit/logs`) restricted to owners and admins.
+  - Database migration for `audit_logs`.
+- **Signed Workspace Invitations**:
+  - Time-limited signed URLs (`URL::temporarySignedRoute`) with 7-day expiration.
+  - Signature verification and automated onboarding (`GET /api/v1/workspace/invitation/accept`).
+- **Interactive OpenAPI Documentation**:
+  - Self-hosted interactive **Scalar** API documentation viewer at `/docs`.
+  - Complete OpenAPI 3.1 YAML specification served at `/docs/spec`.
+- **Public Community & GitHub Growth Tools**:
+  - `.github/FUNDING.yml` sponsoring integrations (GitHub Sponsors, Open Collective).
+  - Dynamic README badges (Release v1.1.0, CI status, PHP 8.3/8.4, Laravel 11, Pint code style, Docs).
+- **Advanced GitHub Actions Workflows**:
+  - `lint.yml`: Laravel Pint / PSR-12 code style check.
+  - `phpstan.yml`: Larastan static analysis workflow with `phpstan.neon`.
+  - `dependabot.yml`: Automated weekly updates for Composer packages and GitHub Actions.
+  - `labeler.yml` & `.github/labeler.yml`: Automated PR labeling based on touched module paths.
+  - `stale.yml`: Automated stale issue and PR lifecycle manager.
+  - `codeql.yml`: CodeQL automated security vulnerability scanning.
+- **Automated Test Suite Expansion**:
+  - Test suite expanded from 15 to 27 unit & feature tests with 115 assertions.
+
+---
+
 ## [1.0.0] - 2026-10-25
 
 ### Added

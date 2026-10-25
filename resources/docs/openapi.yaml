@@ -1,0 +1,228 @@
+openapi: 3.1.0
+info:
+  title: SaaS MVP Modular Monolith API
+  description: |
+    Production-ready Modular Monolith SaaS Platform built with Laravel 11, multi-tenant isolation, 
+    Stripe subscription billing, AI credit metering, and end-to-end distributed observability.
+    
+    Maintained by [Tech AKM LLC](https://tech-akm.com).
+  version: 1.1.0
+  contact:
+    name: Tech AKM Engineering
+    email: contact@tech-akm.com
+    url: https://tech-akm.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:8000
+    description: Local Docker Development Server
+  - url: https://api.yourdomain.com
+    description: Production Environment
+
+paths:
+  /health:
+    get:
+      summary: Deep System Readiness Probe
+      description: Evaluates connectivity and latency for PostgreSQL, Redis, local filesystem storage, and disk capacity.
+      tags: [Observability & Monitoring]
+      responses:
+        '200':
+          description: All critical systems healthy
+        '503':
+          description: One or more dependencies degraded
+
+  /health/live:
+    get:
+      summary: Liveness Probe
+      description: Lightweight ping for Kubernetes or load balancers.
+      tags: [Observability & Monitoring]
+      responses:
+        '200':
+          description: Application container is alive
+
+  /metrics:
+    get:
+      summary: Prometheus Telemetry Metrics
+      description: Returns real-time metrics in OpenMetrics exposition format.
+      tags: [Observability & Monitoring]
+      responses:
+        '200':
+          description: Prometheus formatted text stream
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  /api/v1/auth/register:
+    post:
+      summary: Register New Account
+      description: Creates user, creates initial workspace, assigns Owner role, and returns Sanctum bearer token.
+      tags: [Authentication & IAM]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, password]
+              properties:
+                name: { type: string, example: "Jane Doe" }
+                email: { type: string, format: email, example: "jane@example.com" }
+                password: { type: string, minLength: 8, example: "SecretP@ssw0rd!" }
+                workspace_name: { type: string, example: "Acme AI Labs" }
+      responses:
+        '201':
+          description: Account created successfully
+
+  /api/v1/auth/login:
+    post:
+      summary: Login
+      description: Authenticates user credentials and issues a device-scoped Sanctum bearer token.
+      tags: [Authentication & IAM]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email, example: "jane@example.com" }
+                password: { type: string, example: "SecretP@ssw0rd!" }
+      responses:
+        '200':
+          description: Login successful
+
+  /api/v1/auth/me:
+    get:
+      summary: Authenticated User Profile
+      security:
+        - BearerAuth: []
+      tags: [Authentication & IAM]
+      responses:
+        '200':
+          description: User profile and associated workspaces
+
+  /api/v1/workspaces:
+    get:
+      summary: List User Workspaces
+      security:
+        - BearerAuth: []
+      tags: [Workspaces & RBAC]
+      responses:
+        '200':
+          description: Workspaces array
+    post:
+      summary: Create New Workspace
+      security:
+        - BearerAuth: []
+      tags: [Workspaces & RBAC]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name: { type: string, example: "Marketing Team" }
+      responses:
+        '201':
+          description: Workspace created
+
+  /api/v1/workspace/current:
+    get:
+      summary: Get Current Workspace Details
+      security:
+        - BearerAuth: []
+        - WorkspaceIdHeader: []
+      tags: [Workspaces & RBAC]
+      responses:
+        '200':
+          description: Active workspace details including subscription and usage meters
+
+  /api/v1/workspace/members/invite:
+    post:
+      summary: Invite Team Member
+      security:
+        - BearerAuth: []
+        - WorkspaceIdHeader: []
+      tags: [Workspaces & RBAC]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, role]
+              properties:
+                email: { type: string, format: email, example: "colleague@example.com" }
+                role: { type: string, enum: [admin, member, viewer], example: "member" }
+      responses:
+        '201':
+          description: Member invited
+
+  /api/v1/billing/plans:
+    get:
+      summary: List Subscription Plans
+      tags: [Billing & Subscriptions]
+      responses:
+        '200':
+          description: Available plans, pricing, and feature allowances
+
+  /api/v1/billing/status:
+    get:
+      summary: Workspace Subscription Status
+      security:
+        - BearerAuth: []
+        - WorkspaceIdHeader: []
+      tags: [Billing & Subscriptions]
+      responses:
+        '200':
+          description: Current subscription details and tier verification
+
+  /api/v1/meter/status:
+    get:
+      summary: Credit Quota Status
+      security:
+        - WorkspaceIdHeader: []
+      tags: [AI Credit Metering]
+      responses:
+        '200':
+          description: Credit quota and remaining balance
+
+  /api/v1/meter/deduct:
+    post:
+      summary: Atomically Deduct AI Credits
+      security:
+        - WorkspaceIdHeader: []
+      tags: [AI Credit Metering]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [amount, operation]
+              properties:
+                amount: { type: integer, minimum: 1, example: 5 }
+                operation: { type: string, example: "gemini_agent_query" }
+      responses:
+        '200':
+          description: Credits deducted successfully
+        '429':
+          description: Quota limit exceeded
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: Sanctum Token
+    WorkspaceIdHeader:
+      type: apiKey
+      in: header
+      name: X-Workspace-Id
+      description: Target workspace UUID

@@ -1,0 +1,16 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    paths:
+        - app
+        - config
+        - routes
+
+    # Level 8 is the highest strictness level before raw mixed-type restrictions
+    level: 5
+
+    ignoreErrors:
+        - '#Unsafe usage of new static#'
+
+    checkGenericClassInNonGenericObjectType: false

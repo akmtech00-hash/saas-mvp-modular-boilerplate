@@ -20,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'workspace' => \App\Modules\Workspace\Middleware\EnsureWorkspaceAccess::class,
             'subscribed' => \App\Modules\Billing\Middleware\EnsureSubscriptionActive::class,
+            'feature' => \App\Modules\Features\Middleware\EnsureFeatureActive::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

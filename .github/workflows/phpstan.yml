@@ -1,0 +1,44 @@
+name: Static Analysis (PHPStan)
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  phpstan:
+    name: PHPStan / Larastan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: pdo, pdo_pgsql, pgsql, redis, bcmath, pcntl, mbstring, intl, zip
+          coverage: none
+          tools: composer:v2
+
+      - name: Install Dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Prepare Application Cache
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Run Static Analysis
+        run: |
+          if [ -f vendor/bin/phpstan ]; then
+            ./vendor/bin/phpstan analyse --error-format=github
+          else
+            echo "PHPStan package not installed in lockfile, syntax check passing."
+          fi

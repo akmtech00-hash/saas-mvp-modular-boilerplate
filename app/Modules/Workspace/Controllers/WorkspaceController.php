@@ -108,34 +108,95 @@ class WorkspaceController extends Controller
         /** @var Workspace $workspace */
         $workspace = app(TenantContext::class)->getWorkspace() ?? $request->attributes->get('current_workspace');
 
+        $signedUrl = \Illuminate\Support\Facades\URL::temporarySignedRoute(
+            'api.workspace.invitation.accept',
+            now()->addDays(7),
+            [
+                'workspace' => $workspace->id,
+                'email' => $validated['email'],
+                'role' => $validated['role'],
+            ]
+        );
+
         $invitedUser = User::where('email', $validated['email'])->first();
-        if (!$invitedUser) {
+        if ($invitedUser) {
+            $existing = WorkspaceMember::where('workspace_id', $workspace->id)
+                ->where('user_id', $invitedUser->id)
+                ->first();
+
+            if ($existing) {
+                return response()->json([
+                    'error' => 'already_member',
+                    'message' => 'User is already a member of this workspace.',
+                ], 422);
+            }
+
+            $member = WorkspaceMember::create([
+                'workspace_id' => $workspace->id,
+                'user_id' => $invitedUser->id,
+                'role' => $validated['role'],
+            ]);
+
             return response()->json([
-                'error' => 'user_not_found',
-                'message' => 'User with this email does not exist in the platform.',
-            ], 404);
+                'message' => 'Member added successfully.',
+                'member' => $member,
+                'invitation_url' => $signedUrl,
+                'expires_at' => now()->addDays(7)->toIso8601String(),
+            ], 201);
         }
 
-        $existing = WorkspaceMember::where('workspace_id', $workspace->id)
-            ->where('user_id', $invitedUser->id)
+        return response()->json([
+            'message' => 'Invitation link generated. Send this link to the user to join.',
+            'invitation_url' => $signedUrl,
+            'email' => $validated['email'],
+            'role' => $validated['role'],
+            'expires_at' => now()->addDays(7)->toIso8601String(),
+        ], 201);
+    }
+
+    /**
+     * Accept a signed invitation URL.
+     */
+    public function acceptInvitation(Request $request): JsonResponse
+    {
+        if (!$request->hasValidSignature()) {
+            return response()->json([
+                'error' => 'invalid_signature',
+                'message' => 'The invitation link is invalid or has expired.',
+            ], 403);
+        }
+
+        $workspaceId = $request->query('workspace');
+        $email = $request->query('email');
+        $role = $request->query('role', 'member');
+
+        $user = $request->user();
+        if (!$user || $user->email !== $email) {
+            return response()->json([
+                'error' => 'email_mismatch',
+                'message' => "You must be authenticated as {$email} to accept this invitation.",
+            ], 403);
+        }
+
+        $existing = WorkspaceMember::where('workspace_id', $workspaceId)
+            ->where('user_id', $user->id)
             ->first();
 
         if ($existing) {
             return response()->json([
-                'error' => 'already_member',
-                'message' => 'User is already a member of this workspace.',
-            ], 422);
+                'message' => 'You are already a member of this workspace.',
+            ]);
         }
 
         $member = WorkspaceMember::create([
-            'workspace_id' => $workspace->id,
-            'user_id' => $invitedUser->id,
-            'role' => $validated['role'],
+            'workspace_id' => $workspaceId,
+            'user_id' => $user->id,
+            'role' => $role,
         ]);
 
         return response()->json([
-            'message' => 'Member added successfully.',
+            'message' => 'Successfully joined workspace!',
             'member' => $member,
-        ], 201);
+        ], 200);
     }
 }
