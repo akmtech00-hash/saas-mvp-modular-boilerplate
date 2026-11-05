@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "89ed514f3920999915aeb3cba30cf5ed",
+    "content-hash": "bd3534516d312716aae63cd3c5a91143",
     "packages": [
         {
             "name": "brick/math",
@@ -1063,16 +1063,16 @@
         },
         {
             "name": "laravel/cashier",
-            "version": "v15.8.0",
+            "version": "v16.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/cashier-stripe.git",
-                "reference": "b6ba14692b1bb51cec0fab3bec6f4d8e444dc0b7"
+                "reference": "40fdf5d0461b2f788615dc98931bedd784bceea0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/cashier-stripe/zipball/b6ba14692b1bb51cec0fab3bec6f4d8e444dc0b7",
-                "reference": "b6ba14692b1bb51cec0fab3bec6f4d8e444dc0b7",
+                "url": "https://api.github.com/repos/laravel/cashier-stripe/zipball/40fdf5d0461b2f788615dc98931bedd784bceea0",
+                "reference": "40fdf5d0461b2f788615dc98931bedd784bceea0",
                 "shasum": ""
             },
             "require": {
@@ -1090,20 +1090,22 @@
                 "moneyphp/money": "^4.0",
                 "nesbot/carbon": "^2.0|^3.0",
                 "php": "^8.1",
-                "stripe/stripe-php": "^16.2",
+                "stripe/stripe-php": "^17.4|^18.0|^19.0|^20.0|^21.0",
                 "symfony/console": "^6.0|^7.0|^8.0",
                 "symfony/http-kernel": "^6.0|^7.0|^8.0",
-                "symfony/polyfill-intl-icu": "^1.22.1"
+                "symfony/polyfill-intl-icu": "^1.22.1",
+                "symfony/polyfill-php84": "^1.32"
             },
             "require-dev": {
                 "dompdf/dompdf": "^2.0|^3.0",
-                "mockery/mockery": "^1.0",
-                "orchestra/testbench": "^8.18|^9.0|^10.0|^11.0",
-                "phpstan/phpstan": "^1.10"
+                "orchestra/testbench": "^8.36|^9.15|^10.8|^11.0",
+                "phpstan/phpstan": "^1.10",
+                "spatie/laravel-ray": "^1.40"
             },
             "suggest": {
                 "dompdf/dompdf": "Required when generating and downloading invoice PDF's using Dompdf (^2.0|^3.0).",
-                "ext-intl": "Allows for more locales besides the default \"en\" when formatting money values."
+                "ext-intl": "Allows for more locales besides the default \"en\" when formatting money values.",
+                "spatie/laravel-pdf": "Required when generating and downloading invoice PDF's using Cashier's LaravelPdfInvoiceRenderer."
             },
             "type": "library",
             "extra": {
@@ -1113,7 +1115,7 @@
                     ]
                 },
                 "branch-alias": {
-                    "dev-master": "15.x-dev"
+                    "dev-master": "16.x-dev"
                 }
             },
             "autoload": {
@@ -1146,7 +1148,7 @@
                 "issues": "https://github.com/laravel/cashier/issues",
                 "source": "https://github.com/laravel/cashier"
             },
-            "time": "2026-03-30T12:41:30+00:00"
+            "time": "2026-10-13T15:12:56+00:00"
         },
         {
             "name": "laravel/framework",
@@ -2302,16 +2304,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "3.15.0",
+            "version": "3.15.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CarbonPHP/carbon.git",
-                "reference": "217d38553209bdb44e01590d9e9a2e4df8354cce"
+                "reference": "ce0e5636fae7d1e99856eb70cae4c719a284aa08"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CarbonPHP/carbon/zipball/217d38553209bdb44e01590d9e9a2e4df8354cce",
-                "reference": "217d38553209bdb44e01590d9e9a2e4df8354cce",
+                "url": "https://api.github.com/repos/CarbonPHP/carbon/zipball/ce0e5636fae7d1e99856eb70cae4c719a284aa08",
+                "reference": "ce0e5636fae7d1e99856eb70cae4c719a284aa08",
                 "shasum": ""
             },
             "require": {
@@ -2404,7 +2406,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-10-18T18:27:53+00:00"
+            "time": "2026-10-25T14:32:48+00:00"
         },
         {
             "name": "nette/schema",
@@ -3338,28 +3340,28 @@
         },
         {
             "name": "stripe/stripe-php",
-            "version": "v16.6.0",
+            "version": "v21.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stripe/stripe-php.git",
-                "reference": "d6de0a536f00b5c5c74f36b8f4d0d93b035499ff"
+                "reference": "0d8b075e1a97d15c5324353a5277d0ea686ea525"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/d6de0a536f00b5c5c74f36b8f4d0d93b035499ff",
-                "reference": "d6de0a536f00b5c5c74f36b8f4d0d93b035499ff",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/0d8b075e1a97d15c5324353a5277d0ea686ea525",
+                "reference": "0d8b075e1a97d15c5324353a5277d0ea686ea525",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
                 "ext-json": "*",
                 "ext-mbstring": "*",
-                "php": ">=5.6.0"
+                "php": ">=7.2.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "3.5.0",
+                "friendsofphp/php-cs-fixer": "3.94.0",
                 "phpstan/phpstan": "^1.2",
-                "phpunit/phpunit": "^5.7 || ^9.0"
+                "phpunit/phpunit": "^8.0 || ^9.0"
             },
             "type": "library",
             "extra": {
@@ -3368,6 +3370,9 @@
                 }
             },
             "autoload": {
+                "files": [
+                    "lib/version_check.php"
+                ],
                 "psr-4": {
                     "Stripe\\": "lib/"
                 }
@@ -3391,9 +3396,9 @@
             ],
             "support": {
                 "issues": "https://github.com/stripe/stripe-php/issues",
-                "source": "https://github.com/stripe/stripe-php/tree/v16.6.0"
+                "source": "https://github.com/stripe/stripe-php/tree/v21.3.2"
             },
-            "time": "2025-02-24T22:35:29+00:00"
+            "time": "2026-09-09T20:40:43+00:00"
         },
         {
             "name": "symfony/clock",
@@ -5073,6 +5078,86 @@
                 }
             ],
             "time": "2026-09-25T15:50:05+00:00"
+        },
+        {
+            "name": "symfony/polyfill-php84",
+            "version": "v1.43.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-php84.git",
+                "reference": "22c6548499cbe5c5bb072fc0c42312dff062a015"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-php84/zipball/22c6548499cbe5c5bb072fc0c42312dff062a015",
+                "reference": "22c6548499cbe5c5bb072fc0c42312dff062a015",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2"
+            },
+            "type": "library",
+            "extra": {
+                "thanks": {
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php84\\": ""
+                },
+                "classmap": [
+                    "Resources/stubs"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill backporting some PHP 8.4+ features to lower PHP versions",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "polyfill",
+                "portable",
+                "shim"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/polyfill-php84/tree/v1.43.0"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2026-09-23T22:01:09+00:00"
         },
         {
             "name": "symfony/polyfill-php85",
